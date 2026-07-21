@@ -1,0 +1,4 @@
+res://autoload/card_manager.gd
+res://controllers/tiles/placement_controller.gd
+res://entities/card/card_data.gd
+res://entities/tile/tile_base.gd

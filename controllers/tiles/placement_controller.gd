@@ -70,6 +70,9 @@ func _try_place() -> void:
 	if card == null or not ResourceManager.can_afford(card.resource_cost):
 		return
 	var tile := card.tile_scene.instantiate()
+	if tile is TileBase:
+		(tile as TileBase).model_path = card.model_path
+		tile.scale = Vector3.ONE
 	tile_container.add_child(tile)
 	HexGridManager.place_tile(hovered_cell, tile)
 	ResourceManager.spend(card.resource_cost)

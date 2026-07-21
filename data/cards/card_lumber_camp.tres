@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CardData" format=3]
+
+[ext_resource type="Script" uid="uid://wnijqfeons7s" path="res://entities/card/card_data.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/tiles/tile_lumber_camp.tscn" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"lumber_camp"
+display_name = "Lumber Camp"
+description = "Produces wood every tick."
+card_type = "Resource"
+tile_scene = ExtResource("2")
+resource_cost = {"stone": 5}
+strength_value = 0
+resource_yield = {"wood": 3}

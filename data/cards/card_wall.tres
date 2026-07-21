@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CardData" format=3]
+
+[ext_resource type="Script" uid="uid://wnijqfeons7s" path="res://entities/card/card_data.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://bc8y5tbnj5c05" path="res://scenes/tiles/tile_wall.tscn" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"wall"
+display_name = "Wall"
+description = "Adds base Strength. No production."
+card_type = "Wall"
+tile_scene = ExtResource("2")
+resource_cost = {"wood": 8, "stone": 8}
+strength_value = 3
+resource_yield = {}

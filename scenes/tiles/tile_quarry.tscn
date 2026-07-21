@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://bu2bfdoipqj8s" path="res://entities/tile/tile_base.gd" id="1"]
+
+[node name="TileQuarry" type="Node3D"]
+script = ExtResource("1")
+tile_color = Color(0.55, 0.55, 0.58, 1)
+resource_yield = {"stone": 2}

@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://bc8y5tbnj5c05"]
+
+[ext_resource type="Script" uid="uid://bu2bfdoipqj8s" path="res://entities/tile/tile_base.gd" id="1"]
+
+[node name="TileWall" type="Node3D" unique_id=1442794962]
+script = ExtResource("1")
+strength_value = 3
+tile_color = Color(0.4, 0.4, 0.44, 1)

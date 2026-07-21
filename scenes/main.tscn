@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://0xy8odvkbgl3"]
+
+[ext_resource type="Script" uid="uid://c4d4ftu8s1dtm" path="res://scripts/main.gd" id="1"]
+[ext_resource type="Script" uid="uid://b0um2mhnsvfpg" path="res://controllers/camera/rts_camera.gd" id="2"]
+[ext_resource type="Script" uid="uid://0d1l4ap178sk" path="res://controllers/tiles/placement_controller.gd" id="3"]
+[ext_resource type="Script" uid="uid://rjlslmii5mwe" path="res://ui/ui_root.gd" id="4"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
+size = Vector2(100, 100)
+
+[node name="Main" type="Node3D" unique_id=398085729]
+script = ExtResource("1")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=733303378]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1662702584]
+transform = Transform3D(0.81915206, -0.46984634, 0.32898995, 0, 0.57357645, 0.81915206, -0.57357645, -0.6710101, 0.46984634, 0, 10, 0)
+shadow_enabled = true
+
+[node name="GroundPlane" type="MeshInstance3D" parent="." unique_id=1834627605]
+mesh = SubResource("PlaneMesh_ground")
+
+[node name="TileContainer" type="Node3D" parent="." unique_id=497476073]
+
+[node name="EnemyContainer" type="Node3D" parent="." unique_id=1482082356]
+
+[node name="CameraRig" type="Node3D" parent="." unique_id=1085743384]
+script = ExtResource("2")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraRig" unique_id=2125412873]
+transform = Transform3D(1, 0, 0, 0, 0.76604444, 0.6427876, 0, -0.6427876, 0.76604444, 0, 0, 0)
+spring_length = 18.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/SpringArm3D" unique_id=1114270]
+fov = 35.0
+
+[node name="PlacementController" type="Node3D" parent="." unique_id=990924716]
+script = ExtResource("3")
+camera_path = NodePath("../CameraRig/SpringArm3D/Camera3D")
+tile_container_path = NodePath("../TileContainer")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=409923749]
+script = ExtResource("4")

@@ -5,11 +5,14 @@ signal card_selected(card: CardData)
 signal card_deselected
 
 @export var hand_size := 5
+@export var max_deck_size := 52
 
 var master_deck: Array[CardData] = []
 var deck: Array[CardData] = []
 var hand: Array[CardData] = []
 var selected_card: CardData = null
+
+var tile_catalog
 
 const TILE_SCENES: Dictionary = {
 	"lumber_camp": preload("res://scenes/tiles/tile_lumber_camp.tscn"),
@@ -19,85 +22,49 @@ const TILE_SCENES: Dictionary = {
 	"turret": preload("res://scenes/tiles/tile_turret.tscn"),
 }
 
-const MODEL_PATHS: Dictionary = {
-	"lumber_camp": "res://assets/building_lumbermill_blue.fbx",
-	"quarry": "res://assets/building_mine_blue.fbx",
-	"farm": "res://assets/building_windmill_blue.fbx",
-	"wall": "res://assets/building_tower_base_blue.fbx",
-	"turret": "res://assets/building_tower_catapult_blue.fbx",
-}
-
-const CARD_DEFINITIONS: Array[Dictionary] = [
-	{
-		"id": "lumber_camp",
-		"display_name": "Lumber Camp",
-		"description": "Produces wood every tick.",
-		"card_type": "Resource",
-		"resource_cost": {"stone": 5},
-		"strength_value": 0,
-		"resource_yield": {"wood": 3},
-	},
-	{
-		"id": "quarry",
-		"display_name": "Quarry",
-		"description": "Produces stone every tick.",
-		"card_type": "Resource",
-		"resource_cost": {"wood": 5},
-		"strength_value": 0,
-		"resource_yield": {"stone": 2},
-	},
-	{
-		"id": "farm",
-		"display_name": "Farm",
-		"description": "Produces food every tick.",
-		"card_type": "Resource",
-		"resource_cost": {"wood": 5, "stone": 3},
-		"strength_value": 0,
-		"resource_yield": {"food": 3},
-	},
-	{
-		"id": "wall",
-		"display_name": "Wall",
-		"description": "Adds base Strength. No production.",
-		"card_type": "Wall",
-		"resource_cost": {"wood": 8, "stone": 8},
-		"strength_value": 3,
-		"resource_yield": {},
-	},
-	{
-		"id": "turret",
-		"display_name": "Turret",
-		"description": "Strong Strength contribution. No production.",
-		"card_type": "Turret",
-		"resource_cost": {"wood": 10, "stone": 15, "food": 5},
-		"strength_value": 6,
-		"resource_yield": {},
-	},
-]
-
 func _ready() -> void:
+	tile_catalog = preload("res://data/tile_catalog.gd").new()
 	master_deck = []
-	for definition in CARD_DEFINITIONS:
-		master_deck.append(_build_card(definition))
+	for tile_id in tile_catalog.get_tile_ids():
+		master_deck.append(_build_card(tile_catalog.get_tile(tile_id)))
+	if master_deck.size() > max_deck_size:
+		master_deck = master_deck.slice(0, max_deck_size)
 	_reshuffle_deck()
 	draw_to_full_hand()
 
-func _build_card(definition: Dictionary) -> CardData:
+func build_card(definition: Dictionary) -> CardData:
 	var card := CardData.new()
-	card.id = StringName(definition["id"])
+	var tile_id := String(definition["id"])
+	card.id = StringName(tile_id)
 	card.display_name = String(definition["display_name"])
 	card.description = String(definition["description"])
-	card.card_type = String(definition["card_type"])
-	card.tile_scene = TILE_SCENES[String(definition["id"])]
-	card.model_path = String(MODEL_PATHS[String(definition["id"])])
-	card.resource_cost = Dictionary(definition["resource_cost"])
+	card.card_type = String(definition["type"])
+	card.tile_scene = TILE_SCENES.get(tile_id, preload("res://scenes/tiles/tile_core.tscn"))
+	card.model_path = String(definition["model_path"])
+	card.resource_cost = Dictionary(definition.get("resource_cost", {}))
 	card.strength_value = int(definition["strength_value"])
-	card.resource_yield = Dictionary(definition["resource_yield"])
+	card.resource_yield = Dictionary(definition.get("resource_yield", {}))
 	return card
+
+func _build_card(definition: Dictionary) -> CardData:
+	return build_card(definition)
 
 func _reshuffle_deck() -> void:
 	deck = master_deck.duplicate()
 	deck.shuffle()
+
+func get_remaining_deck_count() -> int:
+	return deck.size()
+
+func add_card_to_deck(card: CardData) -> bool:
+	if master_deck.size() >= max_deck_size:
+		return false
+	master_deck.append(card)
+	if deck.is_empty() and hand.is_empty():
+		_reshuffle_deck()
+	else:
+		deck.append(card)
+	return true
 
 func draw_to_full_hand() -> void:
 	while hand.size() < hand_size:
@@ -105,6 +72,21 @@ func draw_to_full_hand() -> void:
 			_reshuffle_deck()
 		hand.append(deck.pop_front())
 	hand_changed.emit()
+
+func shuffle_hand_with_deck() -> void:
+	# Combine current hand back into the deck, shuffle everything, and draw a new hand
+	if hand.size() == 0:
+		# nothing to shuffle
+		return
+	# Move hand cards back into deck
+	for c in hand:
+		deck.append(c)
+	hand.clear()
+	selected_card = null
+	# Shuffle the combined deck
+	deck.shuffle()
+	# Refill hand
+	draw_to_full_hand()
 
 func select_card(card: CardData) -> void:
 	if selected_card == card:

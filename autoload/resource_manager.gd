@@ -3,6 +3,8 @@ extends Node
 signal resources_changed(resources: Dictionary)
 signal strength_changed(total: int)
 
+@export var developer_mode := true
+
 var resources: Dictionary = {"wood": 20, "stone": 15, "food": 10}
 var total_strength: int = 0
 
@@ -16,12 +18,17 @@ func _process(delta: float) -> void:
 		_run_production_tick()
 
 func can_afford(cost: Dictionary) -> bool:
+	if developer_mode:
+		return true
 	for k in cost:
 		if resources.get(k, 0) < cost[k]:
 			return false
 	return true
 
 func spend(cost: Dictionary) -> void:
+	if developer_mode:
+		resources_changed.emit(resources)
+		return
 	for k in cost:
 		resources[k] = resources.get(k, 0) - cost[k]
 	resources_changed.emit(resources)

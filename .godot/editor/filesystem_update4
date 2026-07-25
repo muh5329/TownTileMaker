@@ -1,4 +1,3 @@
-res://autoload/card_manager.gd
-res://controllers/tiles/placement_controller.gd
-res://entities/card/card_data.gd
-res://entities/tile/tile_base.gd
+res://ui/hud/card_slot.tscn
+res://ui/hud/hand_ui.gd
+res://ui/ui_root.gd

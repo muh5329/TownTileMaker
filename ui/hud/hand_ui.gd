@@ -29,6 +29,8 @@ func _ready() -> void:
 	resized.connect(_refresh)
 	_refresh()
 
+# Refresh the UI
+# Draw the deck and card positions, cards either shift to new slot or fly in from deck
 func _refresh() -> void:
 	# Snapshot where existing cards currently are, so ones that persist can
 	# slide smoothly to their new fan position instead of popping.
@@ -40,11 +42,14 @@ func _refresh() -> void:
 		child.queue_free()
 	_card_nodes.clear()
 
+	# Position and add deck button
 	_deck_button = _build_deck_slot()
 	add_child(_deck_button)
 	_place_deck()
 	_deck_anchor_pos = _deck_button.position + deck_size / 2.0 - card_size / 2.0
 
+
+	# For each card in hand compute its position using compute function and physically draw it onto screen
 	var hand := CardManager.hand
 	var total := hand.size()
 	var draw_index := 0  # for staggering multiple simultaneous draws
@@ -84,6 +89,8 @@ func _place_deck() -> void:
 func _hand_origin_x() -> float:
 	return 220.0 + (size.x - 220.0) / 2.0
 
+
+# Layout in Fan Format
 func _compute_layout(index: int, total: int) -> Dictionary:
 	var t := 0.0
 	if total > 1:
@@ -185,9 +192,9 @@ func _settle(button: Button, layout: Dictionary, is_selected: bool, duration: fl
 	tween.set_parallel(true)
 	tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(button, "position", final_pos, duration)
-	tween.tween_property(button, "rotation_degrees", final_rot, duration)
+	tween.tween_property(button, "rotation_degrees", final_rot , duration)
 	tween.tween_property(button, "scale", Vector2(final_scale, final_scale), duration)
-	tween.tween_property(button, "modulate:a", 1.0, min(duration, 0.2))
+	tween.tween_property(button, "modulate:a", 1.0, min(duration, 0.2)) # Transparency
 
 func _animate_to(button: Button, target_pos: Vector2, target_rot: float, target_scale: float, z: int) -> void:
 	button.z_index = z

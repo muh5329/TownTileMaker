@@ -21,11 +21,30 @@ func _ready() -> void:
 	developer_toggle.offset_top = 72
 	add_child(developer_toggle)
 
+	var recenter_button := Button.new()
+	recenter_button.text = "🏠"
+	recenter_button.custom_minimum_size = Vector2(60, 36)
+	recenter_button.anchor_left = 0.5
+	recenter_button.anchor_right = 0.5
+	recenter_button.anchor_top = 0.0
+	recenter_button.anchor_bottom = 0.0
+	recenter_button.offset_left = -20
+	recenter_button.offset_right = 20
+	recenter_button.offset_top = 16
+	recenter_button.offset_bottom = 52
+	recenter_button.pressed.connect(_on_recenter_camera_pressed)
+	add_child(recenter_button)
+
 	var hand: Control = load("res://ui/hud/hand_ui.gd").new()
 	hand.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	hand.offset_left = 24
 	hand.offset_right = -24
-	hand.offset_top = -92
-	hand.offset_bottom = -20
-	hand.custom_minimum_size = Vector2(600, 80)
+	hand.offset_top = 0
+	hand.offset_bottom = 0
+	hand.custom_minimum_size = Vector2(500, 100)
 	add_child(hand)
+
+func _on_recenter_camera_pressed() -> void:
+	var camera_rig := get_parent().get_node_or_null("CameraRig")
+	if camera_rig != null and camera_rig.has_method("reset_to_start"):
+		camera_rig.call("reset_to_start")

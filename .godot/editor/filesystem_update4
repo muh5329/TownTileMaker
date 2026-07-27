@@ -1,3 +1,3 @@
-res://ui/hud/card_slot.tscn
-res://ui/hud/hand_ui.gd
+res://controllers/camera/rts_camera.gd
 res://ui/ui_root.gd
+res://scenes/tiles/tile_core.tscn

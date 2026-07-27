@@ -17,6 +17,14 @@ class_name RTSCamera
 @onready var spring_arm: SpringArm3D = $SpringArm3D
 
 var drag_pan_active := false
+var _start_transform: Transform3D
+var _start_spring_arm_transform: Transform3D
+var _start_spring_length: float
+
+func _ready() -> void:
+	_start_transform = transform
+	_start_spring_arm_transform = spring_arm.transform
+	_start_spring_length = spring_arm.spring_length
 
 func _process(delta: float) -> void:
 	_handle_pan(delta)
@@ -62,3 +70,8 @@ func _handle_rotate(delta: float) -> void:
 	if Input.is_key_pressed(KEY_E): input += 1
 	if input != 0.0:
 		rotate_y(deg_to_rad(rotate_speed_deg * delta * input))
+
+func reset_to_start() -> void:
+	transform = _start_transform
+	spring_arm.transform = _start_spring_arm_transform
+	spring_arm.spring_length = _start_spring_length

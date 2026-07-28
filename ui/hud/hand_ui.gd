@@ -113,6 +113,7 @@ func _build_deck_slot() -> Button:
 	var button := _make_button(
 		"Deck\n%s/52" % CardManager.get_remaining_deck_count(),
 		deck_size,
+		"Utility",
 		false
 	)
 	button.pressed.connect(_on_deck_pressed)
@@ -120,17 +121,24 @@ func _build_deck_slot() -> Button:
 
 func _build_card_slot(card: CardData) -> Button:
 	var is_selected := CardManager.selected_card == card
+
 	var button := _make_button(
-		"%s\n\n%s\nSTR %d" % [card.display_name, _format_cost(card.resource_cost), card.strength_value],
+		"%s\n\n%s\nSTR %d" % [
+			card.display_name,
+			_format_cost(card.resource_cost),
+			card.strength_value
+		],
 		card_size,
+		card.type,
 		is_selected
 	)
+
 	button.pressed.connect(func(): _on_card_pressed(card))
 	button.mouse_entered.connect(func(): _on_card_hover(button, card, true))
 	button.mouse_exited.connect(func(): _on_card_hover(button, card, false))
 	return button
 
-func _make_button(text: String, sz: Vector2, is_selected: bool) -> Button:
+func _make_button(text: String, sz: Vector2, card_type: String, is_selected: bool) -> Button:
 	var button := Button.new()
 	button.flat = false
 	button.toggle_mode = true
@@ -139,29 +147,44 @@ func _make_button(text: String, sz: Vector2, is_selected: bool) -> Button:
 	button.custom_minimum_size = sz
 	button.size = sz
 	button.text = text
-	button.add_theme_color_override("font_color", Color.WHITE)
+
+	button.add_theme_color_override("font_color", Color.BLACK)
 	button.add_theme_font_size_override("font_size", 14)
-	button.add_theme_stylebox_override("normal", _make_style(is_selected))
-	button.add_theme_stylebox_override("hover", _make_style(true))
-	button.add_theme_stylebox_override("pressed", _make_style(true))
-	button.add_theme_stylebox_override("focus", _make_style(is_selected))
+
+	button.add_theme_stylebox_override("normal", _make_style(card_type, is_selected))
+	button.add_theme_stylebox_override("hover", _make_style(card_type, true))
+	button.add_theme_stylebox_override("pressed", _make_style(card_type, true))
+	button.add_theme_stylebox_override("focus", _make_style(card_type, is_selected))
+
 	return button
 
-func _make_style(is_selected: bool) -> StyleBoxFlat:
+func _make_style(card_type: String, is_selected: bool) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.14, 0.16, 0.21, 0.95)
+
+	var bg := TileCatalog.get_card_color(card_type)
+	bg.a = 0.95
+	style.bg_color = bg
+
 	style.border_width_left = 2
 	style.border_width_top = 2
 	style.border_width_right = 2
 	style.border_width_bottom = 2
+
 	style.corner_radius_top_left = 14
 	style.corner_radius_top_right = 14
-	style.corner_radius_bottom_right = 14
 	style.corner_radius_bottom_left = 14
-	style.border_color = Color(1, 0.85, 0.3) if is_selected else Color(1, 1, 1, 0.35)
+	style.corner_radius_bottom_right = 14
+
+	style.border_color = (
+		Color(1, 0.85, 0.3)
+		if is_selected
+		else Color(1, 1, 1, 0.35)
+	)
+
 	if is_selected:
 		style.shadow_color = Color(1, 0.85, 0.3, 0.5)
 		style.shadow_size = 10
+
 	return style
 
 func _format_cost(cost: Dictionary) -> String:

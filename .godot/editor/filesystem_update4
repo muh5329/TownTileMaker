@@ -1,3 +1,9 @@
 res://controllers/camera/rts_camera.gd
 res://ui/ui_root.gd
 res://scenes/tiles/tile_core.tscn
+res://data/tile_catalog.gd
+res://ui/hud/card_slot.tscn
+res://ui/hud/shop_window.gd
+res://ui/hud/hand_ui.gd
+res://entities/card/card_data.gd
+res://autoload/card_manager.gd

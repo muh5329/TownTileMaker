@@ -11,3 +11,4 @@ class_name CardData
 @export var resource_cost: Dictionary = {}   # {"wood": 10, "stone": 5}
 @export var strength_value: int = 0
 @export var resource_yield: Dictionary = {}  # generated per production tick once placed
+@export var type: String

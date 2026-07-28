@@ -1038,6 +1038,24 @@ const TILE_MAP: Dictionary = {
 	},
 }
 
+
+const TYPE_COLORS := {
+	"Nature": Color(0.5, 0.5, 0.5),
+	"Terrain": Color(0.2, 0.7, 0.2),
+	"Defense": Color(0.55, 0.35, 0.2),
+	"Wall": Color(0.55, 0.35, 0.2),
+	"Turret": Color(0.55, 0.35, 0.2),
+	"Resource": Color(1.0, 0.84, 0.0),
+
+	"Utility": Color(0.18, 0.36, 0.70),
+	"Special": Color(0.55, 0.25, 0.70),
+	"Decoration": Color(0.45, 0.45, 0.45),
+	"Deck": Color(0.12, 0.12, 0.12)
+}
+
+static func get_card_color(card_type: String) -> Color:
+	return TYPE_COLORS.get(card_type, Color(0.18, 0.18, 0.18))
+	
 func get_tile_ids() -> Array[String]:
 	return TILE_MAP.keys()
 

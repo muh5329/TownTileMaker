@@ -44,6 +44,7 @@ func build_card(definition: Dictionary) -> CardData:
 	card.resource_cost = Dictionary(definition.get("resource_cost", {}))
 	card.strength_value = int(definition["strength_value"])
 	card.resource_yield = Dictionary(definition.get("resource_yield", {}))
+	card.type = String(definition.get("type", {}))
 	return card
 
 func _build_card(definition: Dictionary) -> CardData:

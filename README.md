@@ -6,6 +6,12 @@ placement + resource/strength economy. No external art — every tile and
 highlight is a procedurally generated hex-prism mesh, so it opens and runs
 immediately.
 
+https://github.com/user-attachments/assets/d1fdff8b-ca88-400a-9c6e-b7e83f9cd26e
+
+
+
+
+
 ## Requirements
 - **Godot 4.3+** (uses typed Dictionaries/Arrays syntax and `RefCounted`
   static-method classes available in 4.x)
